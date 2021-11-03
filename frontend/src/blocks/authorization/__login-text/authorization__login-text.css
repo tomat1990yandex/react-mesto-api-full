@@ -1,0 +1,16 @@
+.authorization__login-text {
+  cursor: pointer;
+  margin: 21px auto;
+  color: #FFFFFF;
+  text-decoration: none;
+  text-align: center;
+  font-style: normal;
+  font-weight: 40;
+  font-size: 14px;
+  line-height: 1.17;
+  white-space: nowrap;
+}
+
+.authorization__login-text:hover {
+  opacity: 0.8;
+}

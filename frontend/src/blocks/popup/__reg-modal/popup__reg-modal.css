@@ -1,0 +1,13 @@
+.popup__reg-modal {
+  display: flex;
+  flex-direction: column;
+  align-items:center;
+  justify-content: center;
+  min-height: 330px;
+}
+
+@media screen and (max-width: 320px) {
+  .popup__reg-modal {
+    min-height: 308px;
+  }
+}

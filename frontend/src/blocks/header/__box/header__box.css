@@ -1,0 +1,11 @@
+.header__box {
+  display: flex;
+}
+
+@media screen and (max-width: 320px) {
+  .header__box {
+    display: block;
+    align-self: end;
+    margin-bottom: 1px
+  }
+}

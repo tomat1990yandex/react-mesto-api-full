@@ -1,0 +1,10 @@
+.element {
+  width: 282px;
+  display: grid;
+  border-radius: 10px;
+  background-color: #fff;
+  position: relative;
+  max-height: 361px;
+}
+
+
