@@ -57,8 +57,8 @@ app.post('/signup',
   }),
   createUser);
 
-app.use('/', auth, usersRoutes);
-app.use('/', auth, cardsRoutes);
+app.use('/users', auth, usersRoutes);
+app.use('/cards', auth, cardsRoutes);
 app.use('*', (req, res, next) => {
   next(new NotFoundError('Страница не найдена'));
 });
