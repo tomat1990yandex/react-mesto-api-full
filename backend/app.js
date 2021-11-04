@@ -1,7 +1,10 @@
 const express = require('express');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors, celebrate, Joi } = require('celebrate');
+const { apiLogger, errLogger } = require('./middlewares/logger');
+
 
 const usersRoutes = require('./routes/users');
 const cardsRoutes = require('./routes/cards');
@@ -14,8 +17,24 @@ const { PORT = 3000 } = process.env;
 
 const app = express();
 
+mongoose.connect('mongodb://localhost:27017/mestodb',
+  async (err) => {
+    if (err) throw err;
+    console.log('connected to db');
+  });
+
+app.use(cors());
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(apiLogger);
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 app.post('/signin',
   celebrate({
@@ -39,18 +58,13 @@ app.post('/signup',
   }),
   createUser);
 
-mongoose.connect('mongodb://localhost:27017/mestodb',
-  async (err) => {
-    if (err) throw err;
-    console.log('connected to db');
-  });
-
-app.use('/users', auth, usersRoutes);
-app.use('/cards', auth, cardsRoutes);
+app.use('/', auth, usersRoutes);
+app.use('/', auth, cardsRoutes);
 app.use('*', (req, res, next) => {
   next(new NotFoundError('Страница не найдена'));
 });
 
+app.use(errLogger);
 app.use(errors());
 
 app.use((err, req, res, next) => {

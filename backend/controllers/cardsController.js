@@ -16,7 +16,7 @@ const createCard = (req, res, next) => {
     .then((card) => res.status(200).send({ body: card }))
     .catch((err) => {
       if (err.name === 'validationError') {
-        throw new ValidationError('Переданы не корректные данные');
+        next(new ValidationError('Переданы не корректные данные'));
       }
       next(err);
     })
@@ -32,7 +32,7 @@ const deleteCard = (req, res, next) => {
         throw new NotFoundError('Карточка не найдена');
       }
       if (card.owner.toString() !== owner) {
-        throw new ForbiddenError('Недостаточно прав');
+        next(new ForbiddenError('Недостаточно прав'));
       }
       return Card.findOneAndRemove(card._id)
         .then(() => {
@@ -50,7 +50,7 @@ const putLike = (req, res, next) => {
   )
     .then((card) => {
       if (!card) {
-        throw new NotFoundError('Карточка не найдена');
+        next(new NotFoundError('Карточка не найдена'));
       }
       return res.status(200).send({ data: card });
     })
@@ -65,7 +65,7 @@ const removeLike = (req, res, next) => {
   )
     .then((card) => {
       if (!card) {
-        throw new NotFoundError('Карточка не найдена');
+        next(new NotFoundError('Карточка не найдена'));
       }
       return res.status(200).send({ data: card });
     })

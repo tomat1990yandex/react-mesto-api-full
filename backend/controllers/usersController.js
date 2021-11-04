@@ -1,3 +1,4 @@
+const { NODE_ENV, JWT_SECRET_KEY } = process.env;
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
@@ -16,7 +17,7 @@ const getProfile = (req, res, next) => {
   User.findById(req.params.id)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Запрашиваемый пользователь не найден');
+        next(new NotFoundError('Запрашиваемый пользователь не найден'));
       }
       res.status(200).send({ data: user });
     })
@@ -59,7 +60,7 @@ const loginUser = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        'super-crypto-strong-passphrase',
+        NODE_ENV === 'production' ? JWT_SECRET_KEY : 'dev-secret',
         { expiresIn: '7d' },
       );
       return res.status(200).send({ token });
@@ -73,7 +74,7 @@ const getMyProfile = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Данные пользователя не найдены');
+        next(new NotFoundError('Данные пользователя не найдены'));
       }
       res.status(200).send(user);
     })
@@ -89,7 +90,7 @@ const updateProfile = (req, res, next) => {
   )
     .then((user) => {
       if (!user) {
-        throw new ValidationError('Переданы не корректные данные');
+        next(new ValidationError('Переданы не корректные данные'));
       }
       res.status(200).send(user);
     })
@@ -105,7 +106,7 @@ const updateAvatar = (req, res, next) => {
   )
     .then((user) => {
       if (!user) {
-        throw new ValidationError('Переданы не корректные данные');
+        next(new ValidationError('Переданы не корректные данные'));
       }
       res.status(200).send(user);
     })
