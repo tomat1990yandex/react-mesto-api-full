@@ -5,7 +5,6 @@ const bodyParser = require('body-parser');
 const { errors, celebrate, Joi } = require('celebrate');
 const { apiLogger, errLogger } = require('./middlewares/logger');
 
-
 const usersRoutes = require('./routes/users');
 const cardsRoutes = require('./routes/cards');
 
