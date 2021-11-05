@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 import Header from "./Header";
 
@@ -45,6 +46,9 @@ function Login({ handleLogin }) {
           <button className="authorization__button"
                   type="submit"
           >Войти</button>
+          <Link to="/sign-up"
+                className="authorization__login-text"
+          >Нет учетной записи? Зарегистрироваться</Link>
         </form>
       </div>
     </>

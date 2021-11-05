@@ -33,20 +33,18 @@ function App() {
   const history = useHistory();
 
   useEffect(() => {
-    api.getUserData()
-      .then(res => {
-        setCurrentUser(res)
-      })
-      .catch(err => console.log(err));
-  }, [])
-
-  useEffect(() => {
-    api.getCards()
-      .then(res => {
-        setCards(res);
+    const token = localStorage.getItem('jwt');
+    if (!token) {
+      return;
+    }
+    api.setToken(token)
+    api.getInitialData()
+      .then(([user, cards]) => {
+        setCurrentUser(user);
+        setCards(cards.cards.reverse());
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [loggedIn])
 
   function handleCardClick(props) {
     setSelectedCard(props);
@@ -177,6 +175,7 @@ function App() {
 
   const handleLogout = () => {
     localStorage.removeItem('jwt');
+    setLoggedIn(false);
     setIsAuth(false);
     history.push('/sign-in');
   };
