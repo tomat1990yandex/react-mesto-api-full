@@ -1,7 +1,16 @@
+const BASE_URL = `${window.location.protocol}${process.env.REACT_APP_API_URL || '//localhost:3001'}`;
+
 class Api {
   constructor(config) {
     this._url = config.url;
     this._headers = config.headers;
+  }
+
+  setToken(token) {
+    this._headers = {
+      ...this._headers,
+      Authorization: `Bearer ${token}`,
+    }
   }
 
   _getResponse(res) {
@@ -107,10 +116,9 @@ class Api {
 }
 
 const api = new Api({
-  url: 'https://mesto.nomoreparties.co/v1/cohort-26',
+  url: BASE_URL,
   headers: {
-    authorization: 'fd18a1a7-a94a-4eca-b229-2e654460c24a',
-    'Content-Type': 'application/json'
+    "Content-Type": "application/json",
   }
 });
 
