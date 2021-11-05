@@ -70,7 +70,7 @@ const putLike = (req, res, next) => {
       if (!card) {
         next(new NotFoundError('Карточка не найдена'));
       }
-      return res.status(200).send({ data: card });
+      res.status(200).send({ data: card });
     })
     .catch((err) => next(err));
 };
@@ -85,7 +85,7 @@ const removeLike = (req, res, next) => {
       if (!card) {
         next(new NotFoundError('Карточка не найдена'));
       }
-      return res.status(200).send({ data: card });
+      res.status(200).send({ data: card });
     })
     .catch((err) => next(err));
 };

@@ -43,12 +43,12 @@ const createUser = (req, res, next) => {
     .then(() => {
       res.status(200).send({
         data: {
-          name, about, avatar, email,
+          name, email,
         },
       });
     })
     .catch((err) => {
-      if (err.name === 'MongoServerError' && err.code === 11000) {
+      if (err.code === 11000) {
         next(new ConflictError('Пользователь с таким email уже зарегистрирован'));
       }
       next(err);
