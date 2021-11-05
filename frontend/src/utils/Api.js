@@ -1,4 +1,6 @@
-const BASE_URL = `https://api.diminenn.students.nomoredomains.rocks`;
+const BASE_URL = process.env.NODE_ENV === "production"
+  ? "https://api.diminenn.students.nomoredomains.rocks"
+  : "http://localhost:3000";
 
 class Api {
   constructor(config) {

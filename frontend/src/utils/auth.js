@@ -1,4 +1,6 @@
-export const BASE_URL = `https://api.diminenn.students.nomoredomains.rocks`;
+export const BASE_URL = process.env.NODE_ENV === "production"
+  ? "https://api.diminenn.students.nomoredomains.rocks"
+  : "http://localhost:3000";
 
 const getResponse = (res) => {
   return res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`)

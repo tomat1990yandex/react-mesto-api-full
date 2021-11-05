@@ -157,7 +157,7 @@ function App() {
         .then((res) => {
           if(res) {
             setLoggedIn(true);
-            setUserLoginData(res.data.email);
+            setUserLoginData(res.email);
           }
         })
         .catch((err) => {
@@ -201,7 +201,7 @@ function App() {
   function handleAddPlace(card) {
     api.addNewCard(card.name, card.link)
       .then(res => {
-        setCards([res, ...cards]);
+        setCards([res.body, ...cards]);
         closeAllPopups();
       })
       .catch(err => console.log(err))
