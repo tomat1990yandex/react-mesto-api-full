@@ -181,13 +181,14 @@ function App() {
   };
 
   function handleCardLike(card) {
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    const isLiked = card.likes.some(i => i === currentUser._id);
 
-    api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
-      const newCards = cards.map((c) => c._id === card._id ? newCard : c);
-      setCards(newCards);
-    })
-      .catch(err => console.log(err));
+    api.changeLikeCardStatus(card._id, !isLiked)
+      .then((newCard) => {
+        const newCards = cards.map((item) => item._id === card._id ? newCard.data : item );
+        setCards(newCards);
+      })
+      .catch((err) => console.log(err));
   }
 
   function handleCardDelete(card) {
