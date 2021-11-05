@@ -28,6 +28,9 @@ const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
+  if (!email || !password) {
+    next(new ValidationError('Не переданы email или пароль'));
+  }
   bcrypt
     .hash(password, 10)
     .then((hash) => User.create({
@@ -45,9 +48,6 @@ const createUser = (req, res, next) => {
       });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new ValidationError('Переданы не корректные данные'));
-      }
       if (err.name === 'MongoServerError' && err.code === 11000) {
         next(new ConflictError('Пользователь с таким email уже зарегистрирован'));
       }
@@ -56,6 +56,9 @@ const createUser = (req, res, next) => {
 };
 const loginUser = (req, res, next) => {
   const { email, password } = req.body;
+  if (!email || !password) {
+    next(new ValidationError('Пароль и email обязательны!'));
+  }
   User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign(

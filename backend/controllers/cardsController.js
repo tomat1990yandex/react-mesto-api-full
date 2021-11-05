@@ -9,6 +9,21 @@ const getCards = (req, res, next) => {
     .catch((err) => next(err));
 };
 
+const getCard = (req, res, next) => {
+  Card.findOne({ _id: req.params.cardId })
+    .orFail(() => new NotFoundError('Карточка не найдена'))
+    .then((card) => {
+      res.status(200).send({ card });
+    })
+    .catch((err) => {
+      if (err.kind === 'ObjectId') {
+        next(new ValidationError('Невалидный id карточки'));
+      } else {
+        next(err);
+      }
+    });
+};
+
 const createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
@@ -27,19 +42,22 @@ const deleteCard = (req, res, next) => {
   const owner = req.user._id;
   Card
     .findOne({ _id: req.params.cardId })
+    .orFail(() => new NotFoundError('Карточка не найдена'))
     .then((card) => {
-      if (!card) {
-        throw new NotFoundError('Карточка не найдена');
+      if (!card.owner.equals(owner)) {
+        next(new ForbiddenError('Недостаточно прав!'));
+      } else {
+        Card.deleteOne(card)
+          .then(() => res.status(200).send({ message: 'Карточка удалена' }));
       }
-      if (card.owner.toString() !== owner) {
-        next(new ForbiddenError('Недостаточно прав'));
-      }
-      return Card.findOneAndRemove(card._id)
-        .then(() => {
-          res.status(200).send({ message: 'Карточка удалена' });
-        });
     })
-    .catch((err) => next(err));
+    .catch((err) => {
+      if (err.kind === 'ObjectId') {
+        next(new ValidationError('Невалидный id карточки'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 const putLike = (req, res, next) => {
@@ -78,4 +96,5 @@ module.exports = {
   deleteCard,
   putLike,
   removeLike,
+  getCard,
 };
