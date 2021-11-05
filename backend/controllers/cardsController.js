@@ -44,15 +44,20 @@ const deleteCard = (req, res, next) => {
     .findOne({ _id: req.params.cardId })
     .orFail(() => new NotFoundError('Карточка не найдена'))
     .then((card) => {
-      if (card.owner.toString() !== owner) {
-        next(new ForbiddenError('Недостаточно прав'));
+      if (!card.owner.equals(owner)) {
+        next(new ForbiddenError('Недостаточно прав!'));
+      } else {
+        Card.deleteOne(card)
+          .then(() => res.status(200).send({ message: 'Карточка удалена' }));
       }
-      return Card.findOneAndRemove(card._id)
-        .then(() => {
-          res.status(200).send({ message: 'Карточка удалена' });
-        });
     })
-    .catch((err) => next(err));
+    .catch((err) => {
+      if (err.kind === 'ObjectId') {
+        next(new ValidationError('Невалидный id карточки'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 const putLike = (req, res, next) => {
@@ -65,7 +70,7 @@ const putLike = (req, res, next) => {
       if (!card) {
         next(new NotFoundError('Карточка не найдена'));
       }
-      return res.status(200).send({ data: card });
+      res.status(200).send({ data: card });
     })
     .catch((err) => next(err));
 };
@@ -80,7 +85,7 @@ const removeLike = (req, res, next) => {
       if (!card) {
         next(new NotFoundError('Карточка не найдена'));
       }
-      return res.status(200).send({ data: card });
+      res.status(200).send({ data: card });
     })
     .catch((err) => next(err));
 };
