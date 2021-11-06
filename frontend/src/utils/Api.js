@@ -69,7 +69,7 @@ class Api {
   }
 
   likeCard(id) {
-    return fetch(`${this._url}/cards/likes/${id}`,
+    return fetch(`${this._url}/cards/${id}/likes`,
       {
         method: "PUT",
         headers: this._headers
@@ -78,7 +78,7 @@ class Api {
   }
 
   dislikeCard(id) {
-    return fetch(`${this._url}/cards/likes/${id}`,
+    return fetch(`${this._url}/cards/${id}/likes`,
       {
         method: "DELETE",
         headers: this._headers,
@@ -108,7 +108,7 @@ class Api {
   }
 
   changeLikeCardStatus(cardId, isLiked) {
-    return fetch(`${this._url}/cards/likes/${cardId}`,
+    return fetch(`${this._url}/cards/${cardId}/likes`,
       {
         method: isLiked ? "PUT" : "DELETE",
         headers: this._headers

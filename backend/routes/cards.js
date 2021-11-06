@@ -35,14 +35,14 @@ router.delete('/cards/:cardId',
     }),
   }),
   deleteCard);
-router.put('/cards/likes/:cardId',
+router.put('/cards/:cardId/likes',
   celebrate({
     params: Joi.object().keys({
       cardId: Joi.string().required().length(24).hex(),
     }),
   }),
   putLike);
-router.delete('/cards/likes/:cardId',
+router.delete('/cards/:cardId/likes',
   celebrate({
     params: Joi.object().keys({
       cardId: Joi.string().required().length(24).hex(),
