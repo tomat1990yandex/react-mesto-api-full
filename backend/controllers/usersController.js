@@ -21,7 +21,13 @@ const getProfile = (req, res, next) => {
       }
       res.status(200).send({ data: user });
     })
-    .catch((err) => next(err));
+    .catch((err) => {
+      if (err.kind === 'ObjectId') {
+        next(new ValidationError('Невалидный id карточки'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 const createUser = (req, res, next) => {
