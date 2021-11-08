@@ -81,6 +81,7 @@ const removeLike = (req, res, next) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
+    .orFail(() => new NotFoundError('Карточка не найдена'))
     .then((card) => {
       if (!card) {
         next(new NotFoundError('Карточка не найдена'));
